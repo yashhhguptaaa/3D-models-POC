@@ -24,11 +24,20 @@ const envMap = cubeTextureLoader.load([
 ]);
 
 scene.background = envMap;
+scene.environment = envMap;
 
 // add gtlf loader
 const gltfLoader = new GLTFLoader();
 gltfLoader.load("/models/boomBoxGLTF/BoomBox.gltf", (gltf) => {
   const modalScene = gltf.scene;
+  const material = modalScene.children[0].material;
+  pane.addBinding(material, "roughness", {
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
+  //   material.envMap = envMap;
+  material.envMapIntensity = 2;
   modalScene.scale.setScalar(50);
   scene.add(modalScene);
 });
@@ -38,7 +47,7 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-directionalLight.position.set(-2, -2, -2);
+directionalLight.position.set(2, 2, 2);
 scene.add(directionalLight);
 
 // initialize the camera
