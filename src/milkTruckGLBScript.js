@@ -27,32 +27,30 @@ scene.background = envMap;
 scene.environment = envMap;
 
 // add gtlf loader
-const gltfLoader = new GLTFLoader();
-// gltfLoader.load("/models/boomBoxGLTF/BoomBox.gltf", (gltf) => {
-//   const modalScene = gltf.scene;
-//   const material = modalScene.children[0].material;
-//   pane.addBinding(material, "roughness", {
-//     min: 0,
-//     max: 1,
-//     step: 0.01,
-//   });
-//   //   material.envMap = envMap;
-//   material.envMapIntensity = 2;
-//   modalScene.scale.setScalar(50);
-//   scene.add(modalScene);
-// });
+const glbLoader = new GLTFLoader();
 
-gltfLoader.load("/models/boomBoxGLB/BoomBox.glb", (gltf) => {
+glbLoader.load("/models/milkTruckGLB/CesiumMilkTruck.glb", (gltf) => {
   const modalScene = gltf.scene;
-  const material = modalScene.children[0].material;
-  pane.addBinding(material, "roughness", {
-    min: 0,
-    max: 1,
-    step: 0.01,
+  //   const material = modalScene.children[0].material;
+  //   pane.addBinding(material, "roughness", {
+  //     min: 0,
+  //     max: 1,
+  //     step: 0.01,
+  //   });
+  //   //   material.envMap = envMap;
+  //   material.envMapIntensity = 2;
+  modalScene.position.set(-2, -2, -2);
+
+  modalScene.scale.setScalar(0.2);
+
+  modalScene.traverse((child) => {
+    if (child.isMesh) {
+      child.material.envMap = envMap;
+      child.material.roughness = 0;
+      child.material.metalness = 1;
+    }
   });
-  //   material.envMap = envMap;
-  material.envMapIntensity = 2;
-  modalScene.scale.setScalar(50);
+
   scene.add(modalScene);
 });
 
