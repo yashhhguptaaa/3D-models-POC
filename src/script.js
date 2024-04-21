@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { GLTFLoader } from "three/addons/loaders/gltfLoader.js";
 import { Pane } from "tweakpane";
 
 // initialize the pane
 const pane = new Pane();
 
-// add loader
+// add loaders
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 cubeTextureLoader.setPath("textures/");
 
@@ -15,7 +15,7 @@ const scene = new THREE.Scene();
 
 // add the environment map
 const envMap = cubeTextureLoader.load([
-  "px.jpg",
+  "px.png",
   "nx.png",
   "py.png",
   "ny.png",
@@ -24,6 +24,22 @@ const envMap = cubeTextureLoader.load([
 ]);
 
 scene.background = envMap;
+
+// add gtlf loader
+const gltfLoader = new GLTFLoader();
+gltfLoader.load("/models/boomBoxGLTF/BoomBox.gltf", (gltf) => {
+  const modalScene = gltf.scene;
+  modalScene.scale.setScalar(50);
+  scene.add(modalScene);
+});
+
+// add the light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(-2, -2, -2);
+scene.add(directionalLight);
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
@@ -43,7 +59,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// initialize the controls
+// instantiate the controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
@@ -57,7 +73,7 @@ window.addEventListener("resize", () => {
 const renderloop = () => {
   controls.update();
   renderer.render(scene, camera);
-  requestAnimationFrame(renderloop);
+  window.requestAnimationFrame(renderloop);
 };
 
 renderloop();
